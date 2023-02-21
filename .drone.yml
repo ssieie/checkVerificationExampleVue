@@ -8,10 +8,8 @@ steps:
     commands:
       - node -v
       - npm -v
-      - yarn --version
-      - yarn config set cache-folder .yarn-cache
-      - yarn install
-      - yarn run build
+      - npm install
+      - npm run build
 
   - name: 同步文件
     image: drillster/drone-rsync
