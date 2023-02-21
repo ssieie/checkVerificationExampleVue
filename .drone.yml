@@ -2,6 +2,16 @@ kind: pipeline
 type: docker
 name: build
 steps:
+  - name: 依赖缓存
+    image: drillster/drone-volume-cache
+    settings:
+      restore: true
+      mount:
+        - ./node_modules
+    volumes:
+      - name: node_cache
+        path: /cache
+        
   - name: 编译文件
     image: node:14.15
     pull: if-not-exists # always never
@@ -11,21 +21,33 @@ steps:
       - npm install
       - npm run build
 
-  - name: 同步文件
-    image: drillster/drone-rsync
+  # 更新缓存
+  - name: 更新依赖缓存
+    image: drillster/drone-volume-cache
     settings:
-      host: 47.109.17.168
-      username: root
+      rebuild: true
+      mount:
+        - ./node_modules
+    volumes:
+      - name: node_cache
+        path: /cache
+
+  - name: 同步文件
+    image: appleboy/drone-scp
+    settings:
+      host: 22
+      username: root # 登录名
       password:
-        from_secret: ssh_password
-      port: 22
-      command_timeout: 5m # 远程执行命令超时时间
-      hosts:
-        - 172.172.0.12
-      # 来源项目目录
-      source: ./dist/*
-      # 目标服务器目录
-      target: /home/test
+        from_secret: ssh_password # 登录密码
+      command_timeout: 3m
       script:
-        - cd /home/test
-        - ls
+      # 设置要将打包户的文件部署到的文件地址
+      source: dist/* # 打包后的那个目录
+      target: /home/test # 把项目拷贝到target目录
+      rm: true
+      strip_components: 1
+
+volumes:
+  - name: node_cache
+    host:
+      path: /data/node
