@@ -41,11 +41,11 @@ steps:
         from_secret: ssh_password # 登录密码
       command_timeout: 3m
       script:
-      # 设置要将打包户的文件部署到的文件地址
-      source: dist/* # 打包后的那个目录
-      target: /home/test # 把项目拷贝到target目录
-      rm: true
-      strip_components: 1
+        # 设置要将打包户的文件部署到的文件地址
+        source: dist/* # 打包后的那个目录
+        target: /home/test # 把项目拷贝到target目录
+        rm: true
+        strip_components: 1
 
 volumes:
   - name: node_cache
