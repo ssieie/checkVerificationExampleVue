@@ -1,0 +1,30 @@
+kind: pipeline
+type: docker
+name: build
+steps:
+  - name: 编译文件
+    image: node:14.15
+    pull: if-not-exists # always never
+    commands:
+      - node -v
+      - npm -v
+      - yarn --version
+      - yarn config set cache-folder .yarn-cache
+      - yarn install
+      - yarn run build
+
+  - name: 同步文件
+    image: drillster/drone-rsync
+    settings:
+      user: root
+      key:
+        from_secret: ssh_password
+      hosts:
+        - 47.109.17.168
+      # 来源项目目录
+      source: ./dist/*
+      # 目标服务器目录
+      target: /home/test
+      script:
+        - cd /home/test
+        - ls
