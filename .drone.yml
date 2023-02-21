@@ -35,7 +35,7 @@ steps:
   - name: 同步文件
     image: appleboy/drone-scp
     settings:
-      host: 10022
+      host: 47.109.17.168
       username: root # 登录名
       password:
         from_secret: ssh_password # 登录密码
