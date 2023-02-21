@@ -12,17 +12,15 @@ steps:
       - npm run build
 
   - name: 同步文件
-    image: drillster/drone-rsync
+    image: appleboy/drone-ssh
     settings:
-      user: root
-      key:
+      host: 47.109.17.168
+      username: root
+      password:
         from_secret: ssh_password
-      hosts:
-        - 47.109.17.168
-      # 来源项目目录
-      source: ./dist/*
-      # 目标服务器目录
-      target: /home/test
+      port: 22
+      command_timeout: 5m # 远程执行命令超时时间
       script:
+        - cp ./dist/ /home/test
         - cd /home/test
         - ls
