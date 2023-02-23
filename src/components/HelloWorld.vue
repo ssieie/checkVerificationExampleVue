@@ -22,13 +22,9 @@
   ></z-robot-calibration>
 </template>
 <script setup>
-// import "../../../checkVerificationWeb/src/components/index";
-import "../test/bundle";
+import "../../../checkVerificationWeb/src/components/index";
+// import "../test/bundle";
 import { ref, reactive } from "vue";
-
-defineProps({
-  msg: String,
-});
 
 const customStyleObj = reactive({
   style: {
@@ -38,6 +34,7 @@ const customStyleObj = reactive({
 });
 
 let styleFlag = false;
+
 const styleChange = () => {
   styleFlag = !styleFlag;
   if (styleFlag) {
